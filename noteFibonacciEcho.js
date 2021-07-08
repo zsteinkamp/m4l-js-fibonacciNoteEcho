@@ -1,6 +1,8 @@
 inlets=9
 outlets=4
 
+var utils = require("utils.js");
+
 // inlets
 var INLET_NOTE = 0;
 var INLET_VELOCITY = 1;
@@ -35,14 +37,14 @@ var options = [
 setupPattern();
 
 function setupPattern() {
-  //log(options);
+  //utils.log(options);
   pattern = [];
   var b = options[INLET_SEED];
   var a = b;
   var fib = a;
 
   for (var i = 0; i < options[INLET_ITERATIONS]; i++) {
-    //log(fib);
+    //utils.log(fib);
     pattern.push({
       note_incr: i * options[INLET_NOTE_INCR],
       velocity_coeff: Math.pow(options[INLET_VELOCITY_DECAY], i),
@@ -57,7 +59,7 @@ function setupPattern() {
   var output = pattern;
   // calls 'junk' method and gives the rest of the array as js args
   output.unshift('junk');
-  //log(output);
+  //utils.log(output);
   outlet(OUTLET_JSUI, output);
 }
 
@@ -67,7 +69,7 @@ function makeTask(i, p, n, v) {
     v = parseInt(v * p.velocity_coeff);
     var d = p.duration
 
-    //log({
+    //utils.log({
     //  i: i,
     //  n: n,
     //  v: v,
@@ -100,24 +102,4 @@ function handleMessage(i) {
       t.schedule(pattern[idx].time_offset);
     }
   }
-}
-
-function log() {
-  for(var i=0,len=arguments.length; i<len; i++) {
-    var message = arguments[i];
-    if(message && message.toString) {
-      var s = message.toString();
-      if(s.indexOf("[object ") >= 0) {
-        s = JSON.stringify(message);
-      }
-      post(s);
-    }
-    else if(message === null) {
-      post("<null>");
-    }
-    else {
-      post(message);
-    }
-  }
-  post("\n");
 }

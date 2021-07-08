@@ -20,7 +20,7 @@ exports.scale = function(array, newMin, newMax) {
     returnArray.push(array[i] * coeff + offset);
   }
 
-  //log({
+  //exports.log({
   //    min: min,
   //    max: max,
   //    range: range,
@@ -34,7 +34,7 @@ exports.scale = function(array, newMin, newMax) {
 };
 
 exports.HSLToRGB = function(h,s,l) {
-  //log({ h: h, s: s, l: l });
+  //exports.log({ h: h, s: s, l: l });
 
   var c = (1 - Math.abs(2 * l - 1)) * s,
       x = c * (1 - Math.abs((h / 60) % 2 - 1)),
