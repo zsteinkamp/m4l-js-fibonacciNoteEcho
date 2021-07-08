@@ -41,13 +41,13 @@ function setupPattern() {
   var a = b;
   var fib = a;
 
-  for (var i = 0; i <= options[INLET_ITERATIONS]; i++) {
+  for (var i = 0; i < options[INLET_ITERATIONS]; i++) {
     //log(fib);
     pattern.push({
       note_incr: i * options[INLET_NOTE_INCR],
       velocity_coeff: Math.pow(options[INLET_VELOCITY_DECAY], i),
       duration: options[INLET_DUR_BASE] * Math.pow(options[INLET_DUR_DECAY], i),
-      time_offset: options[INLET_TIME_BASE] * (fib - 1)
+      time_offset: i === 0 ? 0 : options[INLET_TIME_BASE] * fib
     });
     fib = a;
     a = a + b;

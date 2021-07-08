@@ -33,8 +33,8 @@ function draw()
     //log("Tap: " + JSON.stringify(tap) + " - " + parseInt(100*offset) + " - min: " + minNote + " - max: " + maxNote + " - range: " + noteRange);
     // set foreground color
     hue = (360 + (30 * tap.note_incr) % 360) % 360;
-    log(tap.note_incr);
-    log(hue);
+    //log(tap.note_incr);
+    //log(hue);
     color = HSLToRGB(hue, 80, 40);
     sketch.glcolor(color.r, color.g, color.b, 1.0);
     sketch.circle(0.25 * tap.velocity_coeff);
