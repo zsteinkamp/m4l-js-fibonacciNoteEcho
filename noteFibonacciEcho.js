@@ -3,7 +3,8 @@ outlets=4
 
 var utils = require("utils.js");
 
-// inlets
+// inlet index -- used to identify an element in the 
+// 'options' array defined below
 var INLET_NOTE = 0;
 var INLET_VELOCITY = 1;
 var INLET_TIME_BASE = 2;
@@ -14,14 +15,7 @@ var INLET_DUR_DECAY = 6;
 var INLET_NOTE_INCR = 7;
 var INLET_VELOCITY_DECAY = 8;
 
-// outlets
-var OUTLET_NOTE = 0;
-var OUTLET_VELOCITY = 1;
-var OUTLET_DURATION = 2;
-var OUTLET_JSUI = 3;
-
-var pattern = [];
-
+// the position in the options array corresponds to the inlet index
 var options = [
   0,     // INLET_NOTE
   0,     // INLET_VELOCITY
@@ -34,14 +28,23 @@ var options = [
   0.8    // INLET_VELOCITY_DECAY
 ];
 
+// outlets
+var OUTLET_NOTE = 0;
+var OUTLET_VELOCITY = 1;
+var OUTLET_DURATION = 2;
+var OUTLET_JSUI = 3;
+
+var pattern = [];
+
 setupPattern();
 
+// Method to calculate the Fibonacci pattern for the current knob values.
 function setupPattern() {
   //utils.log(options);
   pattern = [];
-  var b = options[INLET_SEED];
-  var a = b;
-  var fib = a;
+  var fib = options[INLET_SEED];
+  var prv = fib;
+  var tmp;
 
   for (var i = 0; i < options[INLET_ITERATIONS]; i++) {
     //utils.log(fib);
@@ -49,20 +52,22 @@ function setupPattern() {
       note_incr: i * options[INLET_NOTE_INCR],
       velocity_coeff: Math.pow(options[INLET_VELOCITY_DECAY], i),
       duration: options[INLET_DUR_BASE] * Math.pow(options[INLET_DUR_DECAY], i),
-      time_offset: i === 0 ? 0 : options[INLET_TIME_BASE] * fib
+      time_offset: options[INLET_TIME_BASE] * fib
     });
-    fib = a;
-    a = a + b;
-    b = fib;
+    tmp = fib;
+    fib = fib + prv;
+    prv = tmp;
   }
-  //var output = "foo " + JSON.stringify(pattern);
-  var output = pattern;
-  // calls 'junk' method and gives the rest of the array as js args
-  output.unshift('junk');
-  //utils.log(output);
-  outlet(OUTLET_JSUI, output);
+
+  // Pass 'update' as the head of the array sent to the JSUI outlet calls the
+  // 'update' method in the jsui object with the rest of the pattern array as
+  // js args. This results in the visualization being redrawn.
+  outlet(OUTLET_JSUI, ['update'].concat(pattern));
 }
 
+
+// Returns a function that when executed will send a note of a given pitch,
+// velocity, and duration to the outlets.
 function makeTask(i, p, n, v) {
   return function() {
     n = n + p.note_incr;
@@ -82,22 +87,33 @@ function makeTask(i, p, n, v) {
   }
 }
 
-function msg_int(i) {
-  handleMessage(i);
+function msg_int(value) {
+  // integer value received
+  handleMessage(value);
 }
-function msg_float(i) {
-  handleMessage(i);
+function msg_float(value) {
+  // float value received
+  handleMessage(value);
 }
 
-function handleMessage(i) {
-  options[inlet] = i;
+// called by msg_* methods above when any input is received, e.g. when a knob value changes
+function handleMessage(value) {
+  // 'inlet' is set by M4L and corresponds to the inlet number the last message
+  // was received on.
+  options[inlet] = value;
 
+  // The first two inlets are INLET_NOTE and INLET_VELOCITY, so we do not need to recalculate
+  // the pattern when a message is received on one of those ... only for higher numbered inlets.
   if (inlet > INLET_VELOCITY) {
     setupPattern();
   }
 
   if (inlet === INLET_NOTE && options[INLET_VELOCITY] > 0) {
+    // note received
     for (var idx = 0; idx < pattern.length; idx++) {
+      // Schedule a note-playing task to execute for each element in the
+      // pattern, at time_offset in the future.
+      // The first element is time_offset === 0.
       var t = new Task( makeTask(idx, pattern[idx], options[INLET_NOTE], options[INLET_VELOCITY]) );
       t.schedule(pattern[idx].time_offset);
     }

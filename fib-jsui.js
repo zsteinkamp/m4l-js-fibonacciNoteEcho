@@ -7,7 +7,7 @@ var utils = require("utils.js");
 
 function draw()
 {
-  sketch.glclearcolor(1.0, 1.0, 1.0, 1.0);
+  sketch.glclearcolor(1.0, 1.0, 1.0, 0);
   sketch.glclear();
 
   var tap;
@@ -22,20 +22,27 @@ function draw()
     hue = (360 + (30 * tap.note_incr) % 360) % 360;
     //utils.log(tap.note_incr);
     //utils.log(hue);
-    color = utils.HSLToRGB(hue, .80, .40);
-    sketch.glcolor(color.r, color.g, color.b, 1.0);
+
+    // outer black circle
+    sketch.glcolor(0, 0, 0, 1);
+    sketch.circle(0.28 * tap.velocity_coeff);
+
+    // inner colored circle
+    color = utils.HSLToRGB(hue, .75, .60);
+    sketch.glcolor(color.r, color.g, color.b, 1);
     sketch.circle(0.25 * tap.velocity_coeff);
   }
   sketch.glcolor(0, 0, 0, 1.0);
   sketch.moveto(0.5, -.4);
   if (pattern.length > 0) {
     sketch.textalign("center");
+    sketch.glcolor(1,1,1,1);
     sketch.text("<--- Total " + parseInt(pattern[pattern.length - 1].time_offset)/1000 + " seconds --->");
   }
 }
 
-function junk(data) {
-  pattern = arrayfromargs(arguments);
+function update(data) {
+  pattern = arrayfromargs(arguments); // magical M4L js function
   //utils.log("HEAD: " + JSON.stringify(pattern[0]));
   //utils.log("Received: " + JSON.stringify(pattern));
   draw();
