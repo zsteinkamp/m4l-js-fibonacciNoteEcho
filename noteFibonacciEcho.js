@@ -8,7 +8,7 @@ var utils = require("utils.js");
 var INLET_NOTE = 0;
 var INLET_VELOCITY = 1;
 var INLET_TIME_BASE = 2;
-var INLET_SEED = 3;
+var INLET_TIMESCALE = 3;
 var INLET_ITERATIONS = 4;
 var INLET_DUR_BASE = 5
 var INLET_DUR_DECAY = 6;
@@ -20,7 +20,7 @@ var options = [
   0,     // INLET_NOTE
   0,     // INLET_VELOCITY
   300,   // INLET_TIME_BASE
-  1,     // INLET_SEED
+  1,     // INLET_TIMESCALE
   4,     // INLET_ITERATIONS
   250,   // INLET_DUR_BASE
   0.667, // INLET_DUR_DECAY
@@ -51,7 +51,7 @@ function setupPattern() {
     time_offset: 0
   });
 
-  var prv = options[INLET_SEED];
+  var prv = options[INLET_TIMESCALE];
   var fib = prv * 2;
   var tmp;
 

@@ -12,11 +12,11 @@ The controls are on top, with a visualization below, showing relative time betwe
 
 Here is a summary of the plugin controls:
 
-* *Time Base* - The fundamental unit of time to operate on. If you are trying to use this in existing music and you want it to fit rythmically, set it to something close to 1/4, 1/8, or 1/16 note in your song tempo.
+* *Time Base* - The fundamental unit of time to operate on. If you are trying to use this in existing music and you want it to fit rythmically, set it to something close to 1/4, 1/8, or 1/16 note in your song tempo (1/4 note = 60 / tempo).
 
 * *Iterations* - The number of notes to emit. Each successive note will be delayed from the last note according to the Fibonacci Sequence.
 
-* *Seed* - A quick way to scale the Time Base of the effect, the value of Seed will be used in place of starting with "1" in generating the sequence.
+* *Time Scale* - A quick way to scale the Time Base of the effect, the value of Time Scale will be used in place of starting with "1" in generating the sequence, so you can easily switch to double-time if you set this to 0.5.
 
 * *Velocity Decay* - The factor by which the note velocity is multiplied in each iteration. Numbers less than one will result in velocity decreasing with each note echo. Values greater than one will result in increasing velocity values.
 
