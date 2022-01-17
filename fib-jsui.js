@@ -1,9 +1,13 @@
+outlets=1;
 autowatch=1;
+
 sketch.default2d();
 sketch.glloadidentity();
 sketch.glortho(0., 1, -0.5, 0.5, -1,1.);
 var pattern = [];
 var utils = require("utils.js");
+
+var OUTLET_DURATION = 0;
 
 function draw()
 {
@@ -33,11 +37,11 @@ function draw()
     sketch.circle(0.25 * tap.velocity_coeff);
   }
   sketch.glcolor(0, 0, 0, 1.0);
-  sketch.moveto(0.5, -.4);
+
   if (pattern.length > 0) {
-    sketch.textalign("center");
-    sketch.glcolor(1,1,1,1);
-    sketch.text("<--- Total " + parseInt(pattern[pattern.length - 1].time_offset)/1000 + " seconds --->");
+	outlet(OUTLET_DURATION, parseInt(pattern[pattern.length - 1].time_offset)/1000);
+  } else {
+	outlet(OUTLET_DURATION, 0);
   }
 }
 
