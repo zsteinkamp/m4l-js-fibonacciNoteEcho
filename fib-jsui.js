@@ -39,9 +39,10 @@ function draw()
   sketch.glcolor(0, 0, 0, 1.0);
 
   if (pattern.length > 0) {
-	outlet(OUTLET_DURATION, parseInt(pattern[pattern.length - 1].time_offset)/1000);
-  } else {
-	outlet(OUTLET_DURATION, 0);
+    sketch.textalign("center");
+    sketch.glcolor(1,1,1,1);
+    outlet(0, parseInt(pattern[pattern.length - 1].time_offset)/1000.0);
+    //sketch.text("<--- Total " + parseInt(pattern[pattern.length - 1].time_offset)/1000 + " seconds --->");
   }
 }
 
