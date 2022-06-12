@@ -37,7 +37,8 @@ function draw()
   if (pattern.length > 0) {
     sketch.textalign("center");
     sketch.glcolor(1,1,1,1);
-    sketch.text("<--- Total " + parseInt(pattern[pattern.length - 1].time_offset)/1000 + " seconds --->");
+    outlet(0, parseInt(pattern[pattern.length - 1].time_offset)/1000.0);
+    //sketch.text("<--- Total " + parseInt(pattern[pattern.length - 1].time_offset)/1000 + " seconds --->");
   }
 }
 
