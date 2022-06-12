@@ -22,13 +22,13 @@ If you just want to download and install the device, then go to the [frozen/](ht
 
 * *Time Base* - The fundamental unit of time to operate on. If you are trying to use this in existing music and you want it to fit rythmically, set it to something close to 1/4, 1/8, or 1/16 note in your song tempo (1/4 note = 60 / tempo).
 
+* *Time Scale* - A quick way to scale the Time Base of the effect, the value of Time Scale will be used in place of starting with "1" in generating the sequence, so you can easily switch to double-time if you set this to 0.5.
+
 * *Iterations* - The number of notes to emit. Each successive note will be delayed from the last note according to the Fibonacci Sequence.
 
 * *Note Incr* - Controls how each successive note pitch differs from the last. For example, set to +12 to have each note in the echo sequence increase by an octave.
 
-* *Time Scale* - A quick way to scale the Time Base of the effect, the value of Time Scale will be used in place of starting with "1" in generating the sequence, so you can easily switch to double-time if you set this to 0.5.
-
-* *Velocity Decay* - The factor by which the note velocity is multiplied in each iteration. Numbers less than one will result in velocity decreasing with each note echo. Values greater than one will result in increasing velocity values.
+* *Vel Decay* - The factor by which the note velocity is multiplied in each iteration. Numbers less than one will result in velocity decreasing with each note echo. Values greater than one will result in increasing velocity values.
 
 * *Duration* - The plugin is simple in its handling of MIDI note events, and only understands note-on events, so the Duration value controls the length of each note.
 
