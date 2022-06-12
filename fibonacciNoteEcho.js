@@ -51,22 +51,28 @@ function setupPattern() {
     time_offset: 0
   });
 
-  var prv = options[INLET_TIMESCALE];
-  var fib = prv * 2;
+  var prv = 1;
+  var fib = 1;
   var tmp;
+  var prv_time_offset = 0;
+  var new_time_offset = 0;
 
   for (var i = 1; i < options[INLET_ITERATIONS]; i++) {
     //utils.log(fib);
+    new_time_offset = prv_time_offset + options[INLET_TIMESCALE] * options[INLET_TIME_BASE] * fib
+
     pattern.push({
       note_incr: i * options[INLET_NOTE_INCR],
       velocity_coeff: Math.pow(options[INLET_VELOCITY_DECAY], i),
       duration: options[INLET_DUR_BASE] * Math.pow(options[INLET_DUR_DECAY], i),
-      time_offset: options[INLET_TIME_BASE] * (fib - 1)
+      time_offset: new_time_offset
     });
     tmp = fib;
     fib = fib + prv;
     prv = tmp;
+    prv_time_offset = new_time_offset;
   }
+  //utils.log(pattern);
 
   // Pass 'update' as the head of the array sent to the JSUI outlet calls the
   // 'update' method in the jsui object with the rest of the pattern array as
