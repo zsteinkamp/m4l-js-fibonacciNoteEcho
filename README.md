@@ -16,7 +16,8 @@ If you just want to download and install the device, then go to the [frozen/](ht
 
 ### Changelog
 
-* [0.0.1](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-0.0.1.amxd) - 2022-06-12 - Initial frozen release.
+* [0.0.2](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-0.0.2.amxd) - 2022-06-13 - Working version.
+* 0.0.1 - 2022-06-12 - Initial frozen release. (REMOVED DUE TO BUG)
 
 ### Controls
 
