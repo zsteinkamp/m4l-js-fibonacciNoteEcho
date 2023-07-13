@@ -16,12 +16,13 @@ If you just want to download and install the device, then go to the [frozen/](ht
 
 ### Changelog
 
+* [3](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-3.amxd) - 2023-07-12 - Added note mode to time base.
 * [0.0.2](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-0.0.2.amxd) - 2022-06-13 - Working version.
 * 0.0.1 - 2022-06-12 - Initial frozen release. (REMOVED DUE TO BUG)
 
 ### Controls
 
-* *Time Base* - The fundamental unit of time to operate on. If you are trying to use this in existing music and you want it to fit rythmically, set it to something close to 1/4, 1/8, or 1/16 note in your song tempo (1/4 note = 60 / tempo).
+* *Time Base* - The fundamental unit of time to operate on. If you are trying to use this in existing music and you want it to fit rythmically, you can lock it to the song tempo with the note icon and then choose a note division as the time base. Otherwise you can choose the clock icon and set it in milliseconds.
 
 * *Time Scale* - A quick way to scale the Time Base of the effect, the value of Time Scale will be used in place of starting with "1" in generating the sequence, so you can easily switch to double-time if you set this to 0.5.
 
