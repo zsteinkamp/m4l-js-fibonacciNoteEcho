@@ -3,31 +3,25 @@ autowatch = 1;
 
 sketch.default2d();
 sketch.glloadidentity();
-sketch.glortho(0, 1, -0.5, 0.5, -1, 1);
-var pattern = [];
+sketch.glortho(0., 1, -0.5, 0.5, -1, 1.);
+let uiPattern: Step[] = [];
 var utils = {
-  scale: function (array, newMin, newMax) {
+  scale: function (array: number[], newMin: number, newMax: number) {
+
     // get range
-    var min = null;
-    var max = null;
-    for (var i = 0; i < array.length; i++) {
-      if (min === null || array[i] < min) {
-        min = array[i];
-      }
-      if (max === null || array[i] > max) {
-        max = array[i];
-      }
+    let min: number = array[0]
+    let max: number = array[0];
+    for (var i = 1; i < array.length; i++) {
+      if (min === null || array[i] < min) { min = array[i]; }
+      if (max === null || array[i] > max) { max = array[i]; }
     }
-    var range = max - min;
-
-    var newRange = newMax - newMin;
-
-    var coeff = range ? newRange / parseFloat(range) : 0.0;
-
-    var offset = newMin - min * coeff;
+    const range = max - min;
+    const newRange = newMax - newMin;
+    const coeff = range ? newRange / Math.floor(range) : 0.0;
+    const offset = newMin - (min * coeff);
 
     var returnArray = [];
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
       returnArray.push(array[i] * coeff + offset);
     }
 
@@ -43,44 +37,32 @@ var utils = {
 
     return returnArray;
   },
-  HSLToRGB: function (h, s, l) {
+  HSLToRGB: function (h: number, s: number, l: number) {
     //exports.log({ h: h, s: s, l: l });
 
     var c = (1 - Math.abs(2 * l - 1)) * s,
-      x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+      x = c * (1 - Math.abs((h / 60) % 2 - 1)),
       m = l - c / 2,
       r = 0,
       g = 0,
       b = 0;
     if (0 <= h && h < 60) {
-      r = c;
-      g = x;
-      b = 0;
+      r = c; g = x; b = 0;
     } else if (60 <= h && h < 120) {
-      r = x;
-      g = c;
-      b = 0;
+      r = x; g = c; b = 0;
     } else if (120 <= h && h < 180) {
-      r = 0;
-      g = c;
-      b = x;
+      r = 0; g = c; b = x;
     } else if (180 <= h && h < 240) {
-      r = 0;
-      g = x;
-      b = c;
+      r = 0; g = x; b = c;
     } else if (240 <= h && h < 300) {
-      r = x;
-      g = 0;
-      b = c;
+      r = x; g = 0; b = c;
     } else if (300 <= h && h < 360) {
-      r = c;
-      g = 0;
-      b = x;
+      r = c; g = 0; b = x;
     }
     return {
       r: r + m,
       g: g + m,
-      b: b + m,
+      b: b + m
     };
   },
   log: function () {
@@ -92,22 +74,24 @@ var utils = {
           s = JSON.stringify(message);
         }
         post(s);
-      } else if (message === null) {
+      }
+      else if (message === null) {
         post("<null>");
-      } else {
+      }
+      else {
         post(message);
       }
     }
     post("\n");
-  },
+  }
 };
 
 var OUTLET_DURATION = 0;
 
-var flashIdx = null;
+let flashIdx: (number | null) = null;
 
-function flash(idx) {
-  flashIdx = idx;
+function flash(idx: string) {
+  flashIdx = parseInt(idx);
   draw();
   refresh();
   var t = new Task(function () {
@@ -122,64 +106,50 @@ function draw() {
   sketch.glclearcolor(1.0, 1.0, 1.0, 0);
   sketch.glclear();
 
-  var tap;
-  var color;
+  const offsets = utils.scale(uiPattern.map(function (tap) { return tap.time_offset; }), -3, 4);
 
-  var offsets = utils.scale(
-    pattern.map(function (tap) {
-      return tap.time_offset;
-    }),
-    -3,
-    4
-  );
-
-  for (var i = 0; i < pattern.length; i++) {
-    tap = pattern[i];
+  for (var i = 0; i < uiPattern.length; i++) {
+    const tap = uiPattern[i];
     sketch.moveto(offsets[i], 0.05);
     // set foreground color
-    hue = (360 + ((30 * tap.note_incr) % 360)) % 360;
+    const hue = (360 + (30 * tap.note_incr) % 360) % 360;
     //utils.log(tap.note_incr);
     //utils.log(hue);
 
+    // ability to flash the border
     var circleBorder = 0;
-    if (flashIdx === i.toString()) {
+    if (flashIdx === i) {
       circleBorder = 1;
     }
+
     // outer circle
     //utils.log("idx: " + i + "  circleBorder: " + circleBorder);
     sketch.glcolor(circleBorder, circleBorder, circleBorder, 1);
     sketch.circle(0.28 * tap.velocity_coeff, 4);
 
     // inner colored circle
-    color = utils.HSLToRGB(hue, 0.75, 0.6);
+    const color = utils.HSLToRGB(hue, .75, .60);
     sketch.glcolor(color.r, color.g, color.b, 1);
     sketch.circle(0.25 * tap.velocity_coeff);
   }
   sketch.glcolor(0, 0, 0, 1.0);
 
-  if (pattern.length > 0) {
-    sketch.textalign("center");
+  if (uiPattern.length > 0) {
+    sketch.textalign("center", "center");
     sketch.glcolor(1, 1, 1, 1);
-    outlet(OUTLET_DURATION, parseInt(pattern[pattern.length - 1].time_offset) / 1000.0);
+    outlet(OUTLET_DURATION, Math.floor(uiPattern[uiPattern.length - 1].time_offset) / 1000.0);
   }
 }
 
-function update(data) {
-  pattern = arrayfromargs(arguments); // magical M4L js function
-  //utils.log("HEAD: " + JSON.stringify(pattern[0]));
-  //utils.log("Received: " + JSON.stringify(pattern));
+function update() {
+  uiPattern = arrayfromargs(arguments); // magical M4L js function
+  //utils.log("HEAD: " + JSON.stringify(uiPattern[0]));
+  //utils.log("Received: " + JSON.stringify(uiPattern));
   draw();
   refresh();
 }
 
-function onresize(w, h) {
-  log(w, h);
-  draw();
-  refresh();
-}
-onresize.local = 1; //private
-
-function forcesize(w, h) {
+function forcesize(w: number, h: number) {
   if (w != h * 8) {
     h = Math.floor(w / 8);
     w = h * 8;
@@ -188,7 +158,7 @@ function forcesize(w, h) {
 }
 forcesize.local = 1; //private
 
-function onresize(w, h) {
+function onresize(w: number, h: number) {
   forcesize(w, h);
   draw();
   refresh();
