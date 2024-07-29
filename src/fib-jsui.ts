@@ -124,12 +124,12 @@ function draw() {
     // outer circle
     //utils.log("idx: " + i + "  circleBorder: " + circleBorder);
     sketch.glcolor(circleBorder, circleBorder, circleBorder, 1);
-    sketch.circle(0.28 * tap.velocity_coeff, 4);
+    sketch.circle(0.28 * tap.velocity_coeff, 0, 360);
 
     // inner colored circle
     const color = utils.HSLToRGB(hue, .75, .60);
     sketch.glcolor(color.r, color.g, color.b, 1);
-    sketch.circle(0.25 * tap.velocity_coeff);
+    sketch.circle(0.25 * tap.velocity_coeff, 0, 360);
   }
   sketch.glcolor(0, 0, 0, 1.0);
 
@@ -152,7 +152,7 @@ function forcesize(w: number, h: number) {
   if (w != h * 8) {
     h = Math.floor(w / 8);
     w = h * 8;
-    box.size(w, h);
+    (box as any).size(w, h);
   }
 }
 forcesize.local = 1; //private
