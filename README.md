@@ -16,6 +16,7 @@ If you just want to download and install the device, then go to the [frozen/](ht
 
 ### Changelog
 
+- [4](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-4.amxd) - 2024-07-28 - Rewrite in Typescript; Flash the bubbles!
 - [3](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-3.amxd) - 2023-07-12 - Added note mode to time base.
 - [0.0.2](https://github.com/zsteinkamp/m4l-js-fibonacciNoteEcho/raw/main/frozen/fibonacciNoteEcho-0.0.2.amxd) - 2022-06-13 - Working version.
 - 0.0.1 - 2022-06-12 - Initial frozen release. (REMOVED DUE TO BUG)
