@@ -88,14 +88,13 @@ var utils = {
 
 var OUTLET_DURATION = 0;
 
-let flashIdx: (number | null) = null;
-
 function flash(idx: string) {
-  flashIdx = parseInt(idx);
+  const flashIdx = parseInt(idx);
+  uiPattern[flashIdx].is_on = true
   draw();
   refresh();
   var t = new Task(function () {
-    flashIdx = null;
+    uiPattern[flashIdx].is_on = false
     draw();
     refresh();
   });
@@ -118,7 +117,7 @@ function draw() {
 
     // ability to flash the border
     var circleBorder = 0;
-    if (flashIdx === i) {
+    if (tap.is_on) {
       circleBorder = 1;
     }
 
