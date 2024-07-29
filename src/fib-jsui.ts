@@ -98,7 +98,7 @@ function flash(idx: string) {
     draw();
     refresh();
   });
-  t.schedule(250);
+  t.schedule(uiPattern[flashIdx].duration);
 }
 
 function draw() {
