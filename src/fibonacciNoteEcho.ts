@@ -65,6 +65,7 @@ function setupPattern() {
   // first note plays immediately
   pattern.push({
     note_incr: 0,
+    fib: 0,
     velocity_coeff: 1,
     duration: options[INLET_DUR_BASE],
     time_offset: 0
@@ -82,6 +83,7 @@ function setupPattern() {
 
     pattern.push({
       note_incr: i * options[INLET_NOTE_INCR],
+      fib,
       velocity_coeff: Math.pow(options[INLET_VELOCITY_DECAY], i),
       duration: options[INLET_DUR_BASE] * Math.pow(options[INLET_DUR_DECAY], i),
       time_offset: new_time_offset

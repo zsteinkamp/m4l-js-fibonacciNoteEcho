@@ -1,9 +1,11 @@
 outlets = 1;
 autowatch = 1;
 
+const ASPECT = 4;
+
 sketch.default2d();
 sketch.glloadidentity();
-sketch.glortho(0., 1, -0.5, 0.5, -1, 1.);
+//sketch.glortho(0., 1, -1, 1, -1, 1.);
 let uiPattern: Step[] = [];
 var utils = {
   scale: function (array: number[], newMin: number, newMax: number) {
@@ -65,7 +67,7 @@ var utils = {
       b: b + m
     };
   },
-  log: function () {
+  log: function (_: any) {
     for (var i = 0, len = arguments.length; i < len; i++) {
       var message = arguments[i];
       if (message && message.toString) {
@@ -102,14 +104,16 @@ function flash(idx: string) {
 }
 
 function draw() {
-  sketch.glclearcolor(1.0, 1.0, 1.0, 0);
+  sketch.glclearcolor(0.15, 0.15, 0.15, 1);
   sketch.glclear();
+  sketch.fontsize(9.5);
 
-  const offsets = utils.scale(uiPattern.map(function (tap) { return tap.time_offset; }), -3, 4);
+  const offsets = utils.scale(uiPattern.map(function (tap) { return tap.time_offset; }), -(ASPECT * 0.8), ASPECT * .8);
 
+  //for (var i = uiPattern.length - 1; i >= 0; i--) {
   for (var i = 0; i < uiPattern.length; i++) {
     const tap = uiPattern[i];
-    sketch.moveto(offsets[i], 0.05);
+    sketch.moveto(offsets[i], 0);
     // set foreground color
     const hue = (360 + (30 * tap.note_incr) % 360) % 360;
     //utils.log(tap.note_incr);
@@ -121,22 +125,27 @@ function draw() {
       circleBorder = 1;
     }
 
+    const diameter = 0.33 * tap.velocity_coeff
+
     // outer circle
     //utils.log("idx: " + i + "  circleBorder: " + circleBorder);
     sketch.glcolor(circleBorder, circleBorder, circleBorder, 1);
-    sketch.circle(0.28 * tap.velocity_coeff, 0, 360);
+    sketch.circle(0.02 + diameter, 0, 360);
 
     // inner colored circle
-    const color = utils.HSLToRGB(hue, .75, .60);
+    const color = utils.HSLToRGB(hue, .5, .4);
     sketch.glcolor(color.r, color.g, color.b, 1);
-    sketch.circle(0.25 * tap.velocity_coeff, 0, 360);
+    sketch.circle(diameter, 0, 360);
+    sketch.glcolor(1, 1, 1, 1);
+    sketch.text(tap.fib.toString())
+    //utils.log(tap.fib.toString())
   }
   sketch.glcolor(0, 0, 0, 1.0);
 
   if (uiPattern.length > 0) {
     sketch.textalign("center", "center");
     sketch.glcolor(1, 1, 1, 1);
-    outlet(OUTLET_DURATION, Math.floor(uiPattern[uiPattern.length - 1].time_offset) / 1000.0);
+    outlet(OUTLET_DURATION, Math.floor(uiPattern[uiPattern.length - 1].time_offset));
   }
 }
 
@@ -149,9 +158,9 @@ function update() {
 }
 
 function forcesize(w: number, h: number) {
-  if (w != h * 8) {
-    h = Math.floor(w / 8);
-    w = h * 8;
+  if (w != h * ASPECT) {
+    h = Math.floor(w / ASPECT);
+    w = h * ASPECT;
     (box as any).size(w, h);
   }
 }
