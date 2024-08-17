@@ -1,11 +1,13 @@
 outlets = 1;
 autowatch = 1;
 
-const ASPECT = 4;
+const OUTLET_DUR = 0;
+
+const ASPECT = 400 / 111;
 
 sketch.default2d();
 sketch.glloadidentity();
-//sketch.glortho(0., 1, -1, 1, -1, 1.);
+
 let uiPattern: Step[] = [];
 var utils = {
   scale: function (array: number[], newMin: number, newMax: number) {
@@ -27,45 +29,7 @@ var utils = {
       returnArray.push(array[i] * coeff + offset);
     }
 
-    //exports.log({
-    //    min: min,
-    //    max: max,
-    //    range: range,
-    //    newRange: newRange,
-    //    coeff: coeff,
-    //    offset: offset,
-    //    return: returnArray
-    //});
-
     return returnArray;
-  },
-  HSLToRGB: function (h: number, s: number, l: number) {
-    //exports.log({ h: h, s: s, l: l });
-
-    var c = (1 - Math.abs(2 * l - 1)) * s,
-      x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-      m = l - c / 2,
-      r = 0,
-      g = 0,
-      b = 0;
-    if (0 <= h && h < 60) {
-      r = c; g = x; b = 0;
-    } else if (60 <= h && h < 120) {
-      r = x; g = c; b = 0;
-    } else if (120 <= h && h < 180) {
-      r = 0; g = c; b = x;
-    } else if (180 <= h && h < 240) {
-      r = 0; g = x; b = c;
-    } else if (240 <= h && h < 300) {
-      r = x; g = 0; b = c;
-    } else if (300 <= h && h < 360) {
-      r = c; g = 0; b = x;
-    }
-    return {
-      r: r + m,
-      g: g + m,
-      b: b + m
-    };
   },
   log: function (_: any) {
     for (var i = 0, len = arguments.length; i < len; i++) {
@@ -88,8 +52,6 @@ var utils = {
   }
 };
 
-var OUTLET_DURATION = 0;
-
 function flash(idx: string) {
   const flashIdx = parseInt(idx);
   uiPattern[flashIdx].is_on = true
@@ -103,8 +65,37 @@ function flash(idx: string) {
   t.schedule(uiPattern[flashIdx].duration);
 }
 
+const COLOR_BG = max.getcolor('live_lcd_bg')
+const COLOR_LINE = max.getcolor('live_lcd_frame')
+const COLOR_TITLE = max.getcolor('live_lcd_title')
+
+const colors: Color[] = [
+  // generated at https://supercolorpalette.com/?scp=G0-lch-FF6561-F58126-C49C00-84AE04-00B950-00BE93-00BFD5-00BAFF-00AEFF-7397FF-DA79F8-FF5DBC
+  // using the 'LCH' color model
+  "#FF6561",
+  "#F58126",
+  "#C49C00",
+  "#84AE04",
+  "#00B950",
+  "#00BE93",
+  "#00BFD5",
+  "#00BAFF",
+  "#00AEFF",
+  "#7397FF",
+  "#DA79F8",
+  "#FF5DBC"
+].map((hex: string) => {
+  const matches = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return matches ? [
+    parseInt(matches[1], 16) / 255.0,
+    parseInt(matches[2], 16) / 255.0,
+    parseInt(matches[3], 16) / 255.0,
+    1
+  ] : [0, 0, 0, 1];
+})
+
 function draw() {
-  sketch.glclearcolor(0.15, 0.15, 0.15, 1);
+  sketch.glclearcolor(COLOR_BG);
   sketch.glclear();
   sketch.fontsize(9.5);
 
@@ -114,38 +105,34 @@ function draw() {
   for (var i = 0; i < uiPattern.length; i++) {
     const tap = uiPattern[i];
     sketch.moveto(offsets[i], 0);
-    // set foreground color
-    const hue = (360 + (30 * tap.note_incr) % 360) % 360;
-    //utils.log(tap.note_incr);
-    //utils.log(hue);
 
     // ability to flash the border
-    var circleBorder = 0;
+    var circleBorder = COLOR_LINE;
     if (tap.is_on) {
-      circleBorder = 1;
+      circleBorder = COLOR_TITLE
     }
 
     const diameter = 0.33 * tap.velocity_coeff
 
     // outer circle
     //utils.log("idx: " + i + "  circleBorder: " + circleBorder);
-    sketch.glcolor(circleBorder, circleBorder, circleBorder, 1);
+    sketch.glcolor(circleBorder);
     sketch.circle(0.02 + diameter, 0, 360);
 
     // inner colored circle
-    const color = utils.HSLToRGB(hue, .5, .4);
-    sketch.glcolor(color.r, color.g, color.b, 1);
+    const color = colors[(1152 + tap.note_incr) % colors.length]
+    sketch.glcolor(color);
     sketch.circle(diameter, 0, 360);
-    sketch.glcolor(1, 1, 1, 1);
+    sketch.glcolor(COLOR_BG);
     sketch.text(tap.fib.toString())
     //utils.log(tap.fib.toString())
   }
-  sketch.glcolor(0, 0, 0, 1.0);
+  sketch.glcolor(COLOR_LINE);
 
   if (uiPattern.length > 0) {
     sketch.textalign("center", "center");
-    sketch.glcolor(1, 1, 1, 1);
-    outlet(OUTLET_DURATION, Math.floor(uiPattern[uiPattern.length - 1].time_offset));
+    sketch.glcolor(COLOR_TITLE);
+    outlet(OUTLET_DUR, Math.floor(uiPattern[uiPattern.length - 1].time_offset));
   }
 }
 
@@ -156,21 +143,3 @@ function update() {
   draw();
   refresh();
 }
-
-function forcesize(w: number, h: number) {
-  if (w != h * ASPECT) {
-    h = Math.floor(w / ASPECT);
-    w = h * ASPECT;
-    (box as any).size(w, h);
-  }
-}
-forcesize.local = 1; //private
-
-function onresize(w: number, h: number) {
-  forcesize(w, h);
-  draw();
-  refresh();
-}
-onresize.local = 1; //private
-
-draw();

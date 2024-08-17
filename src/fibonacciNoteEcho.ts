@@ -23,15 +23,15 @@ function log(_: any) {
 
 // inlet index -- used to identify an element in the 
 // 'options' array defined below
-var INLET_NOTE = 0;
-var INLET_VELOCITY = 1;
-var INLET_TIME_BASE = 2;
-var INLET_TIMESCALE = 3;
-var INLET_ITERATIONS = 4;
-var INLET_DUR_BASE = 5
-var INLET_DUR_DECAY = 6;
-var INLET_NOTE_INCR = 7;
-var INLET_VELOCITY_DECAY = 8;
+const INLET_NOTE = 0;
+const INLET_VELOCITY = 1;
+const INLET_TIME_BASE = 2;
+const INLET_TIMESCALE = 3;
+const INLET_ITERATIONS = 4;
+const INLET_DUR_BASE = 5
+const INLET_DUR_DECAY = 6;
+const INLET_NOTE_INCR = 7;
+const INLET_VELOCITY_DECAY = 8;
 
 // the position in the options array corresponds to the inlet index
 const options = [
@@ -47,15 +47,15 @@ const options = [
 ];
 
 // outlets
-var OUTLET_NOTE = 0;
-var OUTLET_VELOCITY = 1;
-var OUTLET_DURATION = 2;
-var OUTLET_JSUI = 3;
+const OUTLET_NOTE = 0;
+const OUTLET_VELOCITY = 1;
+const OUTLET_DURATION = 2;
+const OUTLET_JSUI = 3;
 
 
 let pattern: Step[] = [];
 
-setupPattern();
+//setupPattern();
 
 // Method to calculate the Fibonacci pattern for the current knob values.
 function setupPattern() {

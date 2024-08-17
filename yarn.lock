@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/maxmsp@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@types/maxmsp/-/maxmsp-1.0.11.tgz#17b4cf53750fe27395f65ca48865af443276227d"
-  integrity sha512-LtOgDufOJ+GYUoHz5PCtXYoR0DwieV5J6PEopClUSksuOvcsTjCuB+d7gapQjOwPGiFvlSpa7alMuy49u+fqSQ==
+"@types/maxmsp@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@types/maxmsp/-/maxmsp-1.0.12.tgz#ff74a79f0d038ea5f80c19162172f1582eddb065"
+  integrity sha512-KU6rJkMIujhCKAXMhaxwZ7KNf8nRRipNZZhl5Rra+/tfI1sCnUJ6mFH2ROnLKKtiEm22H0Ui2N4YgHPcpXx7Mw==
 
 typescript@^5.5.4:
   version "5.5.4"
