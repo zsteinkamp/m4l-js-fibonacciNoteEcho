@@ -126,7 +126,7 @@ function draw() {
     // outer circle
     //utils.log("idx: " + i + "  circleBorder: " + circleBorder);
     sketch.glcolor(circleBorder)
-    sketch.circle(0.02 + diameter, 0, 360)
+    sketch.circle(0.03 + diameter, 0, 360)
 
     // inner colored circle
     const color = colors[(1152 + tap.note_incr) % colors.length]
